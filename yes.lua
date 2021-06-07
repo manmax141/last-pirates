@@ -25,19 +25,111 @@
     }
     local farmNPCS = {}
 
-            
-    coroutine.resume(coroutine.create(function()
-        for i = 0,15 do wait()
+ for i = 1,15 do
             
             
-            
-               dots =  {["NPC"] = "Bandit [Lv:5]"; ["Quest"] = "BanditClick";}
+    local dots =  {["NPC"] = "Bandit [Lv:5]"; ["Quest"] = "BanditClick";}
 
-               table.insert(farmNPCS,i, dots)
-       
-        end;
+    table.insert(farmNPCS,i, dots)
+ end;
+ 
+ for i = 15,30 do 
+    
+    local dots =  {["NPC"] = "Pirates [Lv:15]"; ["Quest"] = "PiratesClick";}
 
-    end));
+    table.insert(farmNPCS,i, dots)
+end;
+
+for i = 30,50 do 
+    
+    local dots =  {["NPC"] = "BagyPirates"; ["Quest"] = "BagyPirates";}
+
+    table.insert(farmNPCS,i, dots)
+end;
+
+for i = 50,100 do 
+    
+    local dots =  {["NPC"] = "Revolutionary Troop [Lv:50]"; ["Quest"] = "TroopClick";}
+
+    table.insert(farmNPCS,i, dots)
+end;
+
+for i = 100,150 do 
+    
+    local dots =  {["NPC"] = "Marines [Lv:100]"; ["Quest"] = "MarineClick";}
+
+    table.insert(farmNPCS,i, dots)
+end;
+
+for i = 150,200 do 
+    
+    local dots =  {["NPC"] = "Marines [Lv:150]"; ["Quest"] = "MarineBossClick";}
+
+    table.insert(farmNPCS,i, dots)
+end;
+
+for i = 200,250 do 
+    
+    local dots =  {["NPC"] = "Desert Bandit [Lv:200]"; ["Quest"] = "DesertBanditClick";}
+
+    table.insert(farmNPCS,i, dots)
+end;
+
+for i = 250,300 do 
+    
+    local dots =  {["NPC"] = "Desert Bandit [Lv:200]"; ["Quest"] = "DesertBanditClick";}
+
+    table.insert(farmNPCS,i, dots)
+end;
+
+for i = 300,370 do 
+    
+    local dots =  {["NPC"] = "Cyborg [Lv:300]"; ["Quest"] = "CyborgClick";}
+
+    table.insert(farmNPCS,i, dots)
+end;
+
+for i = 370,400 do 
+    
+    local dots =  {["NPC"] = "Rear Admiral [Lv:370]"; ["Quest"] = "RearAdmiralClick";}
+
+    table.insert(farmNPCS,i, dots)
+end;
+
+for i = 400,450 do 
+    
+    local dots =  {["NPC"] = "Rear Admiral [Lv:370]"; ["Quest"] = "RearAdmiralClick";}
+
+    table.insert(farmNPCS,i, dots)
+end;
+
+for i = 450,570 do 
+    
+    local dots =  {["NPC"] = "fishman [Lv:450]"; ["Quest"] = "FishmanClick";}
+
+    table.insert(farmNPCS,i, dots)
+end;
+
+for i = 570,600 do 
+    
+    local dots =  {["NPC"] = "SharkMan [Lv:570]"; ["Quest"] = "SharkManClick";}
+
+    table.insert(farmNPCS,i, dots)
+end;
+
+for i = 600,700 do 
+    
+    local dots =  {["NPC"] = "SkypieanBandit [Lv:600]"; ["Quest"] = "SkypieanBanditClick";}
+
+    table.insert(farmNPCS,i, dots)
+end;
+
+for i = 700,850 do 
+    
+    local dots =  {["NPC"] = "Castle Guardian [Lv:700]"; ["Quest"] = "CastleGuardianClick";}
+
+    table.insert(farmNPCS,i, dots)
+end;
     local setCFrame = false  
     local AutoFarmPage = venyx:addPage("Auto Farm", 5012544693)
     local NPCSFarmSection = AutoFarmPage:addSection("NPCS Farm")
@@ -87,21 +179,33 @@
         coroutine.resume(coroutine.create(function()
             while wait() do
                 if AutoFarmNPCSOn then
+                    
+                   
                     getgenv().CurrentNPC = farmNPCS[Player.PlayerStats.Level.Value].NPC
                     getgenv().CurrentQuest = farmNPCS[Player.PlayerStats.Level.Value].Quest
+                   
                     pcall(function()
                         
                         for i,v in pairs(workspace:GetDescendants()) do 
-                            if string.match(v.Name, "Click") then
+                            if string.match(v.Name, "Click") or v.Name == getgenv().CurrentNPC then
                                
                             if v.Name == farmNPCS[Player.PlayerStats.Level.Value].Quest and Player.Quest.Doing.Value == "None" then
-                                wait()
+                                
                                 Player.Character.HumanoidRootPart.CFrame = v.CFrame
-                                fireproximityprompt(v:FindFirstChildOfClass("ProximityPrompt"))
+                               for i,prox in pairs(v:GetChildren()) do
+                                if prox:IsA("ProximityPrompt") then
+                                  
+                                   for i = 0,5 do  wait()
+                                    setCFrame = false
+                                    fireproximityprompt(prox)
+                                    print("of a7")
+                                   end
+                                end
+                            end
                             end
                         end
                         end
-                --   Player.CharacterAdded:Wait()
+                   
                     local Character = Player.Character
                     local HRP = Character.HumanoidRootPart
 
@@ -244,6 +348,7 @@
     functions.refreshNPCS("Update")
     end)
 
+
     functions.refreshTools("Add")
     NPCSFarmSection:addButton("Refresh Tools", function()
         functions.refreshTools("Update")
@@ -258,8 +363,6 @@
             properties.AutoEquip = false
     end
     end)
-
-
 
     local theme = venyx:addPage("Theme", 5012544693)
     local colors = theme:addSection("Colors")
