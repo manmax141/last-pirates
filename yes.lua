@@ -186,25 +186,7 @@ end;
                    
                     pcall(function()
                         
-                        for i,v in pairs(workspace:GetDescendants()) do 
-                            if string.match(v.Name, "Click") or v.Name == getgenv().CurrentNPC then
-                               
-                            if v.Name == farmNPCS[Player.PlayerStats.Level.Value].Quest and Player.Quest.Doing.Value == "None" then
-                                
-                                Player.Character.HumanoidRootPart.CFrame = v.CFrame
-                               for i,prox in pairs(v:GetChildren()) do
-                                if prox:IsA("ProximityPrompt") then
-                                  
-                                   for i = 0,5 do  wait()
-                                    setCFrame = false
-                                    fireproximityprompt(prox)
-                                    print("of a7")
-                                   end
-                                end
-                            end
-                            end
-                        end
-                        end
+                     
                    
                     local Character = Player.Character
                     local HRP = Character.HumanoidRootPart
@@ -212,12 +194,38 @@ end;
                     setsimulationradius(math.huge)
                     local npcs = workspace:GetChildren()    
                         
+                
+                       coroutine.wrap(function()
+                        while wait() do 
+                            if Player.Quest.Doing.Value == "None" then
+                        for i,v in pairs(workspace:GetDescendants()) do 
+                     
+                               
+                            if v.Name == farmNPCS[Player.PlayerStats.Level.Value].Quest and Player.Quest.Doing.Value == "None" then
+                                
+                                Player.Character.HumanoidRootPart.CFrame = v.CFrame
+                               for i,prox in pairs(v:GetChildren()) do
+                                if prox:IsA("ProximityPrompt") then
+                                  
+                                   
+                                    setCFrame = false
+                                    fireproximityprompt(prox)
+                                    print("of a7")
+                                   end
+                                end
+                           
+                            end
+                        end
+                    end
+                        end
+                       end)()
                    
                     repeat wait() until Player.Quest.Doing.Value ~= "None"
              local Level = Player.PlayerStats.Level
                 for i = 1, #npcs do 
                     if npcs[i] ~= nil then
                         if npcs[i].Name == farmNPCS[Level.Value].NPC then
+                          
                             local npcHRP = npcs[i].HumanoidRootPart
                             
                         Character.Humanoid.Died:Connect(function()
