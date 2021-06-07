@@ -5,8 +5,11 @@
     local properties = {
         AutoEquip = false;
         Quest = "None";
+        mobFarm = false;
     }
     local Tools = {}
+
+    local Quests = {}
 
     local AutoFarmNPCSOn = false
     getgenv().CurrentNPC = "None"
@@ -130,6 +133,7 @@ for i = 700,850 do
 
     table.insert(farmNPCS,i, dots)
 end;
+
     local setCFrame = false  
     local AutoFarmPage = venyx:addPage("Auto Farm", 5012544693)
     local NPCSFarmSection = AutoFarmPage:addSection("NPCS Farm")
@@ -177,6 +181,113 @@ end;
 
     end
 
+    functions.mobFarm = function()
+        coroutine.resume(coroutine.create(function()
+            while wait() do
+                if properties.mobFarm then
+                    
+                    pcall(function()
+                        print("Auto Farm Off")
+
+                        for i, v in pairs(Player.Character.HumanoidRootPart:GetChildren()) do
+                            if v:IsA("AlignPosition") then
+                                v:Destroy()
+                            end
+                        end
+                        Player.Character.Humanoid.WalkSpeed = 16
+                        Player.Character.Humanoid.JumpPower = 60
+                        AutoFarmNPCSOn = false
+                        
+                        setCFrame = false
+                     
+                   
+                    local Character = Player.Character
+                    local HRP = Character.HumanoidRootPart
+
+                    setsimulationradius(math.huge)
+                    local npcs = workspace:GetChildren()    
+                        
+                
+                       coroutine.wrap(function()
+                        while wait() do 
+                            if properties.mobFarm then
+                            if Player.Quest.Doing.Value == "None" then
+                        for i,v in pairs(workspace:GetDescendants()) do 
+                     
+                               
+                            if v.Name == getgenv().CurrentQuest and Player.Quest.Doing.Value == "None" then
+                                
+                                Player.Character.HumanoidRootPart.CFrame = v.CFrame
+                               for i,prox in pairs(v:GetChildren()) do
+                                if prox:IsA("ProximityPrompt") then
+                                  
+                                   
+                                    setCFrame = false
+                                    fireproximityprompt(prox)
+                                    print("of a7")
+                                   end
+                                end
+                           
+                            end
+                        end
+                    end
+                else
+                    break
+                end
+                        end
+                       end)()
+                   
+                    repeat wait() until Player.Quest.Doing.Value ~= "None"
+             local Level = Player.PlayerStats.Level
+                for i = 1, #npcs do 
+                    if npcs[i] ~= nil then
+                        if npcs[i].Name == getgenv().CurrentNPC then
+                          
+                            local npcHRP = npcs[i].HumanoidRootPart
+                            
+                        Character.Humanoid.Died:Connect(function()
+                            setCFrame = false
+                        end)
+                            if not setCFrame and Character.Humanoid.Health >= 1 then
+                                setCFrame = true
+                                HRP.CFrame = npcHRP.CFrame
+                               
+                            end
+                            Character.Humanoid.WalkSpeed = 0
+                            Character.Humanoid.JumpPower = 0
+                            npcHRP.CFrame = HRP.CFrame* CFrame.new(0,0,-2)
+                            local weld = Instance.new("AlignPosition")
+                            weld.Responsiveness = 200
+                            weld.RigidityEnabled = false
+                            weld.Parent = HRP
+                            weld.Attachment0 = HRP:FindFirstChildOfClass("Attachment")
+                            weld.Attachment1 = npcHRP:FindFirstChildOfClass("Attachment")
+
+                           
+                            if properties.AutoEquip then
+                                local tool = Player.Backpack:FindFirstChild(getgenv().CurrentTool) or Player.Character:FindFirstChild(getgenv().CurrentTool)
+                        
+                                tool.Parent = Player.Character
+                            end
+                            virtualUser:CaptureController()
+                            virtualUser:ClickButton1(Vector2.new(Mouse.x,Mouse.y))
+                            
+                        if npcs[i].Humanoid.Health < npcs[i].Humanoid.MaxHealth then
+                                npcs[i].Humanoid.Health = 0
+                            end
+                        end
+
+                    end
+                end
+               end)
+            else
+
+                break
+            end
+            end
+        end))
+    end
+
     functions.autoFarmNPCS = function()
         coroutine.resume(coroutine.create(function()
             while wait() do
@@ -199,6 +310,7 @@ end;
                 
                        coroutine.wrap(function()
                         while wait() do 
+                            if AutoFarmNPCSOn then
                             if Player.Quest.Doing.Value == "None" then
                         for i,v in pairs(workspace:GetDescendants()) do 
                      
@@ -219,7 +331,10 @@ end;
                             end
                         end
                     end
+                else
+                    break
                         end
+                    end
                        end)()
                    
                     repeat wait() until Player.Quest.Doing.Value ~= "None"
@@ -330,6 +445,67 @@ end;
         end
     end
 
+    functions.refreshQuests = function(value)
+        if value == "Add" then
+            for i, npc in pairs(workspace:GetDescendants()) do
+                if npc~=nil and npc:FindFirstChild("Proximity") then
+                        
+                    if not Quests[npc.Name] then
+                        local name = string.gsub(npc.Name, "Click", "")
+                      table.insert(Quests,i, name)
+                    end
+                end
+            end
+    
+            QuestsDropdown = NPCSFarmSection:addDropdown("Quests", Quests, function(str)
+                if properties.mobFarm then
+                    properties.mobFarm = false
+                    str=str.."Click"
+                    getgenv().CurrentQuest = str
+                  print(getgenv().CurrentQuest)
+                wait(1)
+                properties.mobFarm = true
+                setCFrame = false
+                else
+                    str=str.."Click"
+                    getgenv().CurrentQuest = str
+                    print(getgenv().CurrentQuest)
+                end
+            end)
+            elseif value == "Update" then
+                for i, npc in pairs(workspace:GetDescendants()) do
+                    if npc~=nil and npc:FindFirstChild("Proximity") then
+                            
+                        if not Quests[npc.Name] then
+                            local name = string.gsub(npc.Name, "Click", "")
+                          table.insert(Quests,i, name)
+                        end
+                    end
+                end
+    
+                NPCSFarmSection:updateDropdown(QuestsDropdown, "Quests", Quests, function(str)
+                    if properties.mobFarm then
+                        properties.mobFarm = false
+                        for i, v in pairs(Player.Character.HumanoidRootPart:GetChildren()) do
+                        if v:IsA("BodyPosition") then
+                            v:Destroy()
+                        end
+                        end
+                        str=str.."Click"
+                        getgenv().CurrentQuest = str
+                        print(getgenv().CurrentQuest)
+                        wait(1)
+                        properties.mobFarm = true
+                        setCFrame = false
+                    else
+                        str=str.."Click"
+                        getgenv().CurrentQuest = str
+                        print(getgenv().CurrentQuest)
+                    end
+                end)
+            end
+        end
+
     NPCSFarmSection:addToggle("Auto Farm", nil, function(value)
         if value then
             wait(1)
@@ -348,6 +524,29 @@ end;
         Player.Character.Humanoid.WalkSpeed = 16
         Player.Character.Humanoid.JumpPower = 60
         AutoFarmNPCSOn = false
+        setCFrame = false
+    end
+    end)
+
+    NPCSFarmSection:addToggle("Mob Farm", nil, function(value)
+        if value then
+            wait(1)
+            print("Mob Farm On")
+            properties.mobFarm = true
+            
+            functions.mobFarm()
+        else
+        print("Auto Farm Off")
+
+        for i, v in pairs(Player.Character.HumanoidRootPart:GetChildren()) do
+            if v:IsA("AlignPosition") then
+                v:Destroy()
+            end
+        end
+        Player.Character.Humanoid.WalkSpeed = 16
+        Player.Character.Humanoid.JumpPower = 60
+        properties.mobFarm = false
+        AutoFarmNPCSOn = false
         wait(1)
         setCFrame = false
     end
@@ -358,6 +557,10 @@ end;
     functions.refreshNPCS("Update")
     end)
 
+    functions.refreshQuests("Add")    
+         NPCSFarmSection:addButton("Refresh Quests", function()
+         functions.refreshQuests("Update")
+    end)
 
     functions.refreshTools("Add")
     NPCSFarmSection:addButton("Refresh Tools", function()
@@ -375,7 +578,7 @@ end;
     end)
 
 
-    LocalSection:addButton("Inf HP", function()
+    LocalSection:addButton("Inf HP (YOU CANT ATTACK WHILE USING THIS)", function()
         if Player.Character then
             game.Players.LocalPlayer.Character.Humanoid.Name = 1
             local l = game.Players.LocalPlayer.Character["1"]:Clone()
@@ -405,7 +608,8 @@ end;
             end)
         end
     end)
-
+  
+   
     local theme = venyx:addPage("Theme", 5012544693)
     local colors = theme:addSection("Colors")
 
