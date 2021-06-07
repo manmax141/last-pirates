@@ -377,10 +377,32 @@ end;
 
     LocalSection:addButton("Inf HP", function()
         if Player.Character then
-            Player.Character.Humanoid:Destroy()
-            local hum = Instance.new("Humanoid", Player.Character)
-            hum.MaxHealth = math.huge
-            hum.Health = hum.MaxHealth
+            game.Players.LocalPlayer.Character.Humanoid.Name = 1
+            local l = game.Players.LocalPlayer.Character["1"]:Clone()
+            l.Parent = game.Players.LocalPlayer.Character
+            l.Name = "Humanoid"
+            wait()
+            game.Players.LocalPlayer.Character["1"]:Destroy()
+            game.Workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character
+            game.Players.LocalPlayer.Character.Animate.Disabled = true
+            wait()
+            game.Players.LocalPlayer.Character.Animate.Disabled = false
+            game.Players.LocalPlayer.Character.Humanoid.DisplayDistanceType = "None"
+            wait(4.85)
+            workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
+            pos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+            wait(.4)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+            workspace.CurrentCamera.CameraType = Enum.CameraType.Track
+
+            l.Died:Connect(function()
+                wait()
+                xos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+                game.Players.LocalPlayer.Character.Humanoid.Health = 0
+                workspace.CurrentCamera.CameraType = Enum.CameraType.Track
+                wait(.4)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = xos
+            end)
         end
     end)
 
