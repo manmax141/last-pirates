@@ -61,9 +61,9 @@ for i = 100,150 do
     table.insert(farmNPCS,i, dots)
 end;
 
-for i = 150,200 do 
+for i = 150,200 do       
     
-    local dots =  {["NPC"] = "Marines [Lv:150]"; ["Quest"] = "MarineClick";}
+    local dots =  {["NPC"] = "Marines [Lv:100]"; ["Quest"] = "MarineClick";}
 
     table.insert(farmNPCS,i, dots)
 end;
@@ -133,6 +133,8 @@ end;
     local setCFrame = false  
     local AutoFarmPage = venyx:addPage("Auto Farm", 5012544693)
     local NPCSFarmSection = AutoFarmPage:addSection("NPCS Farm")
+    local PlayerPage = venyx:addPage("Player", 5012544693)
+    local LocalSection = PlayerPage:addSection("Local")
     local virtualUser = game:GetService("VirtualUser")
     local Mouse = Player:GetMouse()
 
@@ -370,6 +372,16 @@ end;
             print("Auto Equip Off")
             properties.AutoEquip = false
     end
+    end)
+
+
+    LocalSection:addButton("Inf HP", function()
+        if Player.Character then
+            Player.Character.Humanoid:Destroy()
+            local hum = Instance.new("Humanoid", Player.Character)
+            hum.MaxHealth = math.huge
+            hum.Health = hum.MaxHealth
+        end
     end)
 
     local theme = venyx:addPage("Theme", 5012544693)
