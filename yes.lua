@@ -156,6 +156,7 @@ end;
             end
         
         ToolsDropdown = NPCSFarmSection:addDropdown("Equip Tool", Tools, function(string)
+            wait()
                 getgenv().CurrentTool = string
                 print(getgenv().CurrentTool)
             end)
@@ -174,6 +175,7 @@ end;
             end
         
             NPCSFarmSection:updateDropdown(ToolsDropdown, "Equip Tool", Tools, function(str)
+                wait()
                 getgenv().CurrentTool = str
                 print(getgenv().CurrentTool)
             end)
@@ -401,6 +403,7 @@ end;
         end
 
         NPCSdropDown = NPCSFarmSection:addDropdown("NPCS", NPCS, function(string)
+            wait()
             if AutoFarmNPCSOn then
             AutoFarmNPCSOn = false
             getgenv().CurrentNPC = string
@@ -425,6 +428,7 @@ end;
             end
 
             NPCSFarmSection:updateDropdown(NPCSdropDown, "NPCS", NPCS, function(string)
+                wait()
                 if AutoFarmNPCSOn then
                     AutoFarmNPCSOn = false
                     for i, v in pairs(Player.Character.HumanoidRootPart:GetChildren()) do
@@ -458,6 +462,7 @@ end;
             end
     
             QuestsDropdown = NPCSFarmSection:addDropdown("Quests", Quests, function(str)
+                wait()
                 if properties.mobFarm then
                     properties.mobFarm = false
                     str=str.."Click"
@@ -484,6 +489,7 @@ end;
                 end
     
                 NPCSFarmSection:updateDropdown(QuestsDropdown, "Quests", Quests, function(str)
+                    wait()
                     if properties.mobFarm then
                         properties.mobFarm = false
                         for i, v in pairs(Player.Character.HumanoidRootPart:GetChildren()) do
