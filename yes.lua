@@ -63,7 +63,7 @@ end;
 
 for i = 150,200 do 
     
-    local dots =  {["NPC"] = "Marines [Lv:150]"; ["Quest"] = "MarineBossClick";}
+    local dots =  {["NPC"] = "Marines [Lv:150]"; ["Quest"] = "MarineClick";}
 
     table.insert(farmNPCS,i, dots)
 end;
