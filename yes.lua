@@ -48,6 +48,7 @@
 
 
     local farmNPCS = {}
+    local Parts = {}
 
  for i = 1,15 do
             
@@ -205,7 +206,7 @@ end;
         end
 
     end
-
+    wait()
     functions.mobFarm = function()
         coroutine.resume(coroutine.create(function()
             while wait() do
@@ -318,7 +319,7 @@ end;
             while wait() do
                 if AutoFarmNPCSOn then
                     
-                   
+               wait()
                     getgenv().CurrentNPC = farmNPCS[Player.PlayerStats.Level.Value].NPC
                     getgenv().CurrentQuest = farmNPCS[Player.PlayerStats.Level.Value].Quest
                    
@@ -436,49 +437,27 @@ end;
             while wait() do
                 if properties.DFFarm then
                     wait()
-                --   if Player ~= nil then
-                   --- if Player.PlayerStats.Money.Value >= 250000 then
-                     --   for i,v in pairs(workspace:GetDescendants()) do
-                       --     if v.Name == "RandomDFCilck" then
-                           --    fireclickdetector(v.ClickDetector)
-                          ---      repeat wait() until Player.PlayerGui:FindFirstChild("RandomFruitGui")
-                            --    for a,b in pairs(Player.PlayerGui.RandomFruitGui:GetChildren()) do
-                               --     if b:IsA("TextButton") and b:FindFirstChild("TextLabel") and b:FindFirstChild("TextLabel").Text == "Random Devil Fruit $:250,000" then
+                   if Player ~= nil then
+                    if Player.PlayerStats.Money.Value >= 250000 then
+                        for i,v in pairs(workspace:GetDescendants()) do
+                            if v.Name == "RandomDFCilck" then
+                               fireclickdetector(v.ClickDetector)
+                              repeat wait() until Player.PlayerGui:FindFirstChild("RandomFruitGui")
+                             for a,b in pairs(Player.PlayerGui.RandomFruitGui:GetChildren()) do
+                                    if b:IsA("TextButton") and b:FindFirstChild("TextLabel") and b:FindFirstChild("TextLabel").Text == "Random Devil Fruit $:250,000" then
 
-                                        
-                                    --     print("omak yousef mkna")
-                                     --    function fireButton1(button)
-                                     --       for i,signal in next, getconnections(button.MouseButton1Click) do
-                                           --     signal:Fire()
-                                       --     end
-                                       --     for i,signal in next, getconnections(button.MouseButton1Down) do
-                                           --     signal:Fire()
-                                      --      end
-                                      --      for i,signal in next, getconnections(button.Activated) do
-                                             --   signal:Fire()
-                                      --      end
-                                    --     end
+                                        mousemoveabs(b.Position.X,b.Position.Y)
+                                        virtualUser:CaptureController()
+                                        virtualUser:ClickButton1(Vector2.new(Mouse.x,Mouse.y))
+                                         print("omak yousef mkna")
                                          
-                                       --  function fireButton2(button)
-                                       ---     for i,signal in next, getconnections(button.MouseButton2Click) do
-                                            --    signal:Fire()
-                                       --     end
-                                       --     for i,signal in next, getconnections(button.MouseButton2Down) do
-                                             --   signal:Fire()
-                                        --    end
-                                        --    for i,signal in next, getconnections(button.Activated) do
-                                             --   signal:Fire()
-                                         --   end
-                                        -- end
-                                        -- 
-                                       --  fireButton1(b)   
-                                  --  end
-                                --end
-                         --       
-                       --     end
-                 --       end
-              --      end
-             --   end
+                                    end
+                                end
+                                
+                            end
+                        end
+                   end
+                end
                     for i,v in pairs(workspace:GetChildren()) do
                         if v:FindFirstChild("DF") then
                             wait()
