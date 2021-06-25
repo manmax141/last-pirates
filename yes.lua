@@ -1,7 +1,7 @@
 repeat wait() until game:IsLoaded() and game.Players and game.Players.LocalPlayer and game.Players.LocalPlayer.Character
 local UILibrary = loadstring(game:HttpGet("https://pastebin.com/raw/V1ca2q9s"))()
 
-getgenv().StandWanted = "None"
+getgenv().StandWanted = {"None"}
 
 local properties = {
     autoStand = false,
@@ -91,8 +91,9 @@ events.autoStand = function()
         local Character = Player.Character
         local StandValue = Player.PlayerStats.Stand
 
-        if StandValue.Value == getgenv().StandWanted then
-           
+        for i,v in pairs(getgenv().StandWanted) do
+
+            if StandValue.Value == v then
         else
           
             if properties.usingArrow then
@@ -125,6 +126,7 @@ events.autoStand = function()
 
            
         end
+    end
     else
         break
     end
@@ -143,6 +145,15 @@ local autoStandToggle = StandsPage.AddToggle("Auto Stand", false, function(Value
         print("Auto Stand off")
     end
 end)
-local standDropdown = StandsPage.AddDropdown("Stand", Stands, function(stand)
-    getgenv().StandWanted = stand
-end)
+
+local StandsLabel = StandsPage.AddLabel("Stands")
+
+for i = 1,#Stands do
+    local standToggle = StandsPage.AddToggle(Stands[i], false, function(Value)
+        if Value then
+            table.insert(getgenv().StandWanted, Stands[i])
+        else
+            table.remove(getgenv().StandWanted, Stands[i]) 
+        end
+    end)
+end
