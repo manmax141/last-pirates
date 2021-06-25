@@ -153,7 +153,7 @@ for i = 1,#Stands do
         if Value then
             table.insert(getgenv().StandWanted, Stands[i])
         else
-            table.remove(getgenv().StandWanted, Stands[i]) 
+            table.remove(getgenv().StandWanted, i) 
         end
     end)
 end
