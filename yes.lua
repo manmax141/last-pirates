@@ -7,6 +7,7 @@ local properties = {
     autoStand = false,
     usingArrow = false,
     ateRoka = false,
+    shinyFarm = false
 }
 
 local Stands = {
@@ -112,10 +113,18 @@ events.autoStand = function()
                   
                    
                 if not properties.ateRoka then
-                 
+                 if properties.shinyFarm then
+                    if Character.StandMorph.StandSkin.Value == "" then
+                        properties.usingArrow = true
+                        properties.ateRoka = true
+                        functions.eatRoka()
+                    end
+                else
                     properties.usingArrow = true
                     properties.ateRoka = true
                     functions.eatRoka()
+                 end
+                   
                     
                 end
                     properties.usingArrow = true
@@ -145,6 +154,17 @@ local autoStandToggle = StandsPage.AddToggle("Auto Stand", false, function(Value
         print("Auto Stand off")
     end
 end)
+
+local shinyFarmToggle = StandsPage.AddToggle("Shiny Farm", false, function(Value)
+    if Value then
+          properties.shinyFarm = true
+          
+          print("Shiny Farm on")
+      else
+          properties.shinyFarm = false
+          print("Shiny Farm off")
+      end
+  end)
 
 local StandsLabel = StandsPage.AddLabel("Stands")
 
