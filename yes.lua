@@ -170,6 +170,7 @@ events.autoStand = function()
                
                 if StandValue.Value == "None" then  
                     properties.usingArrow = true 
+                    properties.ateRoka = true
                 else
                   
                    
