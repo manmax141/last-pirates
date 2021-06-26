@@ -1,7 +1,5 @@
 repeat wait() until game:IsLoaded() and game.Players and game.Players.LocalPlayer and game.Players.LocalPlayer.Character
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/GreenDeno/Venyx-UI-Library/main/source.lua"))()
-
-getgenv().StandWanted = {"None"}
 getgenv().Items = {"None"}
 
 local properties = {
@@ -10,6 +8,31 @@ local properties = {
     ateRoka = false,
     shinyFarm = false,
     itemFarm = false
+}
+
+local StandsToGet = {
+    ["Platinum Sun"] = false, 
+    ["White Poison"] = false, 
+    ["Violet Fog"] = false, 
+    ["Six Pistols"] = false, 
+    ["Airsmith"] = false, 
+    ["Scarlet King"] = false, 
+    ["Golden Spirit"] = false, 
+    ["Zipper Fingers"] = false, 
+    ["Ms. Vice President"] = false,
+    ["Ice Album"] = false,
+    ["Ocean Boy"] = false,
+    ["That Hand"] = false,
+    ["Shining Sapphire"] = false,
+    ["Deadly King"] = false,
+    ["Yellow Hot Chili Pepper"] = false,
+    ["Violet Vine"] = false,
+    ["Tentacle Green"] = false,
+    ["Grey Rapier"] = false,
+    ["Magician's Ember"] = false,
+    ["Void"] = false,
+    ["The Universe"] = false,
+    ["Anubiz"] = false
 }
 
 local Stands = {
@@ -36,6 +59,7 @@ local Stands = {
     "The Universe",
     "Anubiz"
 }
+
 
 local Items = {
     "Rokakaka",
@@ -84,6 +108,7 @@ miscSection:addKeybind("Toggle Keybind", Enum.KeyCode.RightControl, function()
 end)
 
 functions.addWorthiness = function()
+    wait()
     local Player = game.Players.LocalPlayer
     local Character = Player.Character or Player.CharacterAdded:Wait()
 
@@ -99,44 +124,26 @@ functions.addWorthiness = function()
 end
 
 functions.eatRoka = function()
-    local Character = Player.Character or Player.CharacterAdded:Wait()
+    if properties.autoStand then
+    wait()
+    local Player = game.Players.LocalPlayer
+    local StandValue = Player.PlayerStats.Stand
+   if StandsToGet[StandValue.Value] == false then
+        wait(.5)
+        local Character = Player.Character or Player.CharacterAdded:Wait()
 
-    Character.RemoteEvent:FireServer("EndDialogue", rokakakaEatTable)
+        Character.RemoteEvent:FireServer("EndDialogue", rokakakaEatTable)
+    end
+end
 end
 
 functions.useArrow = function()
+    wait()
     local Character = Player.Character or Player.CharacterAdded:Wait()
 
     Character.RemoteEvent:FireServer("EndDialogue", useArrowTable)
 end
 
-events.itemFarm = function()
-    spawn(function()
-        while wait() do
-            wait()
-            if properties.itemFarm then
-                wait()
-                local Player = game.Players.LocalPlayer
-                local Character = Player.Character
-
-                for i,v in pairs(workspace:GetChildren()) do wait()
-
-                    if Items[v] then
-                        wait(.65)
-                        setsimulationradius(math.huge)
-                        Character:MoveTo(v.Position)
-                        fireclickdetector(v.ClickDetector)
-                    end
-
-                end
-            else
-                wait()
-                break
-            end
-
-        end
-    end)
-end
 
 events.autoStand = function()
     spawn(function()
@@ -147,9 +154,8 @@ events.autoStand = function()
         local Character = Player.Character
         local StandValue = Player.PlayerStats.Stand
 
-            if getgenv().StandWanted[StandValue.Value] then
-            else
-                
+            if StandsToGet[StandValue.Value] == false or StandValue.Value == "None" then
+                wait()
             if properties.usingArrow then
             spawn(function()
                 functions.useArrow()
@@ -169,16 +175,19 @@ events.autoStand = function()
                    
                 if not properties.ateRoka then
                  if properties.shinyFarm then
-                    if Character.StandMorph.StandSkin.Value == "" and not getgenv().StandWanted[StandValue.Value] then
+                    if Character.StandMorph.StandSkin.Value == "" and StandsToGet[StandValue.Value] == false then
+                        wait()
                         properties.usingArrow = true
                         properties.ateRoka = true
                         functions.eatRoka()
                     end
                 else
-                   if not getgenv().StandWanted[StandValue.Value] then
+                   if StandsToGet[StandValue.Value] == false then
+                    wait()
                     properties.usingArrow = true
                     properties.ateRoka = true
                     functions.eatRoka()
+                   
                    end
                  end
                    
@@ -241,23 +250,12 @@ local StandsSection = StandsPage:addSection("Stands")
 for i = 1,#Stands do
     local standToggle = StandsSection:addToggle(Stands[i], false, function(Value)
         if Value then
-            table.insert(getgenv().StandWanted, Stands[i])
+            wait()
+            StandsToGet[Stands[i]] = true
         else
-            table.remove(getgenv().StandWanted, i) 
+            wait()
+            StandsToGet[Stands[i]] = false
         end
     end)
 end
-
-local ItemsSection = ItemsPage:addSection("Items")
-
-for i = 1,#Items do
-    local itemToggle = ItemsSection:addToggle(Items[i], false, function(value)
-        if value then
-            table.insert(getgenv().Items, Items[i])
-        else
-            table.remove(getgenv().Items, i)  
-        end
-    end)
-end
-
 venyx:SelectPage(venyx.pages[1], true)
