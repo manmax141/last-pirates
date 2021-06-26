@@ -119,14 +119,17 @@ end
 
 functions.eatRoka = function()
     if properties.autoStand then
-    wait()
+    
     local Player = game.Players.LocalPlayer
     local StandValue = Player.PlayerStats.Stand
    if StandsToGet[StandValue.Value] == false then
-        wait(.5)
+    properties.usingArrow = true
+    properties.ateRoka = true
+    wait(.75)
         local Character = Player.Character or Player.CharacterAdded:Wait()
 
         Character.RemoteEvent:FireServer("EndDialogue", rokakakaEatTable)
+        
     end
 end
 end
@@ -138,6 +141,7 @@ functions.useArrow = function()
     Character.RemoteEvent:FireServer("EndDialogue", useArrowTable)
     properties.usingArrow = false
     properties.ateRoka = false
+    
 end
 
 
@@ -173,15 +177,13 @@ events.autoStand = function()
                  if properties.shinyFarm then
                     if Character.StandMorph.StandSkin.Value == "" and StandsToGet[StandValue.Value] == false then
                         wait()
-                        properties.usingArrow = true
-                        properties.ateRoka = true
+                        
                         functions.eatRoka()
                     end
                 else
                    if StandsToGet[StandValue.Value] == false then
                     wait()
-                    properties.usingArrow = true
-                    properties.ateRoka = true
+                   
                     functions.eatRoka()
                    
                    end
