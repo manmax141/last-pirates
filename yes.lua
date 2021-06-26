@@ -1,13 +1,15 @@
 repeat wait() until game:IsLoaded() and game.Players and game.Players.LocalPlayer and game.Players.LocalPlayer.Character
-local UILibrary = loadstring(game:HttpGet("https://pastebin.com/raw/V1ca2q9s"))()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/GreenDeno/Venyx-UI-Library/main/source.lua"))()
 
 getgenv().StandWanted = {"None"}
+getgenv().Items = {"None"}
 
 local properties = {
     autoStand = false,
     usingArrow = false,
     ateRoka = false,
-    shinyFarm = false
+    shinyFarm = false,
+    itemFarm = false
 }
 
 local Stands = {
@@ -35,6 +37,22 @@ local Stands = {
     "Anubiz"
 }
 
+local Items = {
+    "Rokakaka",
+    "Mysterious Arrow",
+    "Lucky Arrow",
+    "Rib Cage of Saint's Corpse",
+    "Pure Rokakaka",
+    "Steel Ball",
+    "Quinton's Glove",
+    "Zeppeli's Headband",
+    "Ancient Scroll",
+    "Stone Mask",
+    "Gold Coin",
+    "Diamond",
+    "DEO's Diary"
+}
+
 local rokakakaEatTable = {
    ["NPC"] = "Rokakaka",
    ["Option"] = "Option1",
@@ -50,11 +68,20 @@ local useArrowTable = {
 local events = {}
 local functions = {}
 
-local MainUI = UILibrary.Load("Mos Hub")
-local StandsPage = MainUI.AddPage("Stands",true)
-
+local venyx = library.new("Venyx", 5013109572)
+local StandsPage = venyx:addPage("Stands", 5012544693)
+local ItemsPage = venyx:addPage("Items", 5012544693)
+local MiscPage = venyx:addPage("Misc", 5012544693)
 local Player = game.Players.LocalPlayer
 local Character = Player.Character or Player.CharacterAdded:Wait()
+
+local miscSection = MiscPage:addSection("Misc")
+miscSection:addKeybind("Toggle Keybind", Enum.KeyCode.RightControl, function()
+    print("Activated Keybind")
+    venyx:toggle()
+    end, function()
+    print("Changed Keybind")
+end)
 
 functions.addWorthiness = function()
     local Player = game.Players.LocalPlayer
@@ -83,6 +110,34 @@ functions.useArrow = function()
     Character.RemoteEvent:FireServer("EndDialogue", useArrowTable)
 end
 
+events.itemFarm = function()
+    spawn(function()
+        while wait() do
+            wait()
+            if properties.itemFarm then
+                wait()
+                local Player = game.Players.LocalPlayer
+                local Character = Player.Character
+
+                for i,v in pairs(workspace:GetChildren()) do wait()
+
+                    if Items[v] then
+                        wait(.65)
+                        setsimulationradius(math.huge)
+                        Character:MoveTo(v.Position)
+                        fireclickdetector(v.ClickDetector)
+                    end
+
+                end
+            else
+                wait()
+                break
+            end
+
+        end
+    end)
+end
+
 events.autoStand = function()
     spawn(function()
    while wait() do
@@ -92,12 +147,11 @@ events.autoStand = function()
         local Character = Player.Character
         local StandValue = Player.PlayerStats.Stand
 
-        for i,v in pairs(getgenv().StandWanted) do
-
-            if StandValue.Value == v then
-        else
-          
+            if getgenv().StandWanted[StandValue.Value] then
+            else
+                
             if properties.usingArrow then
+            spawn(function()
                 functions.useArrow()
                 functions.addWorthiness()
     
@@ -105,6 +159,7 @@ events.autoStand = function()
                 wait(10)
                 properties.usingArrow = false
                 properties.ateRoka = false
+            end)
             else
                
                 if StandValue.Value == "None" then  
@@ -114,27 +169,26 @@ events.autoStand = function()
                    
                 if not properties.ateRoka then
                  if properties.shinyFarm then
-                    if Character.StandMorph.StandSkin.Value == "" then
+                    if Character.StandMorph.StandSkin.Value == "" and not getgenv().StandWanted[StandValue.Value] then
                         properties.usingArrow = true
                         properties.ateRoka = true
                         functions.eatRoka()
                     end
                 else
+                   if not getgenv().StandWanted[StandValue.Value] then
                     properties.usingArrow = true
                     properties.ateRoka = true
                     functions.eatRoka()
+                   end
                  end
                    
                     
                 end
-                    properties.usingArrow = true
-                    properties.ateRoka = true
                  end
                
             end
 
            
-        end
     end
     else
         break
@@ -143,7 +197,9 @@ end
 end)
 end
 
-local autoStandToggle = StandsPage.AddToggle("Auto Stand", false, function(Value)
+local AutoStandsSection = StandsPage:addSection("Auto Stand")
+
+local autoStandToggle = AutoStandsSection:addToggle("Auto Stand", false, function(Value)
   if Value then
         properties.autoStand = true
         
@@ -155,7 +211,7 @@ local autoStandToggle = StandsPage.AddToggle("Auto Stand", false, function(Value
     end
 end)
 
-local shinyFarmToggle = StandsPage.AddToggle("Shiny Farm", false, function(Value)
+local shinyFarmToggle = AutoStandsSection:addToggle("Shiny Farm", false, function(Value)
     if Value then
           properties.shinyFarm = true
           
@@ -166,10 +222,24 @@ local shinyFarmToggle = StandsPage.AddToggle("Shiny Farm", false, function(Value
       end
   end)
 
-local StandsLabel = StandsPage.AddLabel("Stands")
+local AutoItemSection = ItemsPage:addSection("Item's Farm")
+
+local itemFarmToggle = AutoItemSection:addToggle("Item Farm", false, function(Value)
+    if Value then
+          properties.itemFarm = true
+          
+          events.itemFarm()
+          print("Item Farm on")
+      else
+          properties.itemFarm = false
+          print("Item Farm off")
+     end
+end)
+
+local StandsSection = StandsPage:addSection("Stands")
 
 for i = 1,#Stands do
-    local standToggle = StandsPage.AddToggle(Stands[i], false, function(Value)
+    local standToggle = StandsSection:addToggle(Stands[i], false, function(Value)
         if Value then
             table.insert(getgenv().StandWanted, Stands[i])
         else
@@ -177,3 +247,17 @@ for i = 1,#Stands do
         end
     end)
 end
+
+local ItemsSection = ItemsPage:addSection("Items")
+
+for i = 1,#Items do
+    local itemToggle = ItemsSection:addToggle(Items[i], false, function(value)
+        if value then
+            table.insert(getgenv().Items, Items[i])
+        else
+            table.remove(getgenv().Items, i)  
+        end
+    end)
+end
+
+venyx:SelectPage(venyx.pages[1], true)
