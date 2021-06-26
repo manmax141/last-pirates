@@ -142,6 +142,8 @@ functions.useArrow = function()
     local Character = Player.Character or Player.CharacterAdded:Wait()
 
     Character.RemoteEvent:FireServer("EndDialogue", useArrowTable)
+    properties.usingArrow = false
+    properties.ateRoka = false
 end
 
 
