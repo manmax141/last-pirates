@@ -1,5 +1,6 @@
-repeat wait() until game:IsLoaded() and game.Players and game.Players.LocalPlayer and game.Players.LocalPlayer.Character
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/GreenDeno/Venyx-UI-Library/main/source.lua"))()
+pcall(function()
+    repeat wait() until game:IsLoaded() and game.Players and game.Players.LocalPlayer and game.Players.LocalPlayer.Character
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
 getgenv().Items = {"None"}
 
 local properties = {
@@ -92,21 +93,14 @@ local useArrowTable = {
 local events = {}
 local functions = {}
 
-local venyx = library.new("Venyx", 5013109572)
-local StandsPage = venyx:addPage("Stands", 5012544693)
-local ItemsPage = venyx:addPage("Items", 5012544693)
-local MiscPage = venyx:addPage("Misc", 5012544693)
+local kavo = Library.CreateLib("Mos Lord Hub", "BloodTheme")
+local StandsPage = kavo:NewTab("Stands")
+local ItemsPage = kavo:NewTab("Items")
+local MiscPage = kavo:NewTab("Misc")
 local Player = game.Players.LocalPlayer
 local Character = Player.Character or Player.CharacterAdded:Wait()
 
-local miscSection = MiscPage:addSection("Misc")
-miscSection:addKeybind("Toggle Keybind", Enum.KeyCode.RightControl, function()
-    print("Activated Keybind")
-    venyx:toggle()
-    end, function()
-    print("Changed Keybind")
-end)
-
+local miscSection = MiscPage:NewSection("Misc")
 functions.addWorthiness = function()
     wait()
     local Player = game.Players.LocalPlayer
@@ -208,9 +202,9 @@ end
 end)
 end
 
-local AutoStandsSection = StandsPage:addSection("Auto Stand")
+local AutoStandsSection = StandsPage:NewSection("Auto Stand")
 
-local autoStandToggle = AutoStandsSection:addToggle("Auto Stand", false, function(Value)
+local autoStandToggle = AutoStandsSection:NewToggle("Auto Stand", "Toggles Auto Stand", function(Value)
   if Value then
         properties.autoStand = true
         
@@ -222,7 +216,7 @@ local autoStandToggle = AutoStandsSection:addToggle("Auto Stand", false, functio
     end
 end)
 
-local shinyFarmToggle = AutoStandsSection:addToggle("Shiny Farm", false, function(Value)
+local shinyFarmToggle = AutoStandsSection:NewToggle("Shiny Farm", "Stops on any shiny", function(Value)
     if Value then
           properties.shinyFarm = true
           
@@ -233,9 +227,9 @@ local shinyFarmToggle = AutoStandsSection:addToggle("Shiny Farm", false, functio
       end
   end)
 
-local AutoItemSection = ItemsPage:addSection("Item's Farm")
+local AutoItemSection = ItemsPage:NewSection("Item's Farm")
 
-local itemFarmToggle = AutoItemSection:addToggle("Item Farm", false, function(Value)
+local itemFarmToggle = AutoItemSection:NewToggle("Item Farm", "Toggles Item Farm", function(Value)
     if Value then
           properties.itemFarm = true
           
@@ -247,10 +241,10 @@ local itemFarmToggle = AutoItemSection:addToggle("Item Farm", false, function(Va
      end
 end)
 
-local StandsSection = StandsPage:addSection("Stands")
+local StandsSection = StandsPage:NewSection("Stands")
 
 for i = 1,#Stands do
-    local standToggle = StandsSection:addToggle(Stands[i], false, function(Value)
+    local standToggle = StandsSection:NewToggle(Stands[i], "Stand", function(Value)
         if Value then
             wait()
             StandsToGet[Stands[i]] = true
@@ -260,4 +254,4 @@ for i = 1,#Stands do
         end
     end)
 end
-venyx:SelectPage(venyx.pages[1], true)
+end)
