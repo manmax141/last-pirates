@@ -1,4 +1,4 @@
-pcall(function()
+
     repeat wait() until game:IsLoaded() and game.Players and game.Players.LocalPlayer and game.Players.LocalPlayer.Character
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
 getgenv().Items = {"None"}
@@ -8,7 +8,8 @@ local properties = {
     usingArrow = false,
     ateRoka = false,
     shinyFarm = false,
-    itemFarm = false
+    itemFarm = false,
+    autoArcade = false
 }
 
 local StandsToGet = {
@@ -90,12 +91,18 @@ local useArrowTable = {
     ["Dialogue"] = "Dialogue2"
 }
 
+local autoArcadeTable = {
+    ["NPC"] = "Item Machine",
+    ["Option"] = "Option1",
+    ["Dialogue"] = "Dialogue1"
+}
+
 local events = {}
 local functions = {}
 
 local kavo = Library.CreateLib("Mos Lord Hub", "BloodTheme")
 local StandsPage = kavo:NewTab("Stands")
-local ItemsPage = kavo:NewTab("Items")
+local ArcadePage = kavo:NewTab("Arcade")
 local MiscPage = kavo:NewTab("Misc")
 local Player = game.Players.LocalPlayer
 local Character = Player.Character or Player.CharacterAdded:Wait()
@@ -133,6 +140,21 @@ functions.eatRoka = function()
         
     end
 end
+end
+
+events.autoArcade = function()
+
+    spawn(function()
+        while wait() do
+
+            if properties.autoArcade then
+                Character.RemoteEvent:FireServer("EndDialogue", autoArcadeTable)
+            else
+                break
+            end
+        end
+    end)
+
 end
 
 functions.useArrow = function()
@@ -233,17 +255,17 @@ local shinyFarmToggle = AutoStandsSection:NewToggle("Shiny Farm", "Stops on any 
       end
   end)
 
-local AutoItemSection = ItemsPage:NewSection("Item's Farm")
+local ArcadeSection = ArcadePage:NewSection("Auto Arcade")
 
-local itemFarmToggle = AutoItemSection:NewToggle("Item Farm", "Toggles Item Farm", function(Value)
+local AutoArcadeToggle = ArcadeSection:NewToggle("Auto Arcade", "Toggles Auto Arcade", function(Value)
     if Value then
-          properties.itemFarm = true
+          properties.autoArcade = true
           
-          events.itemFarm()
-          print("Item Farm on")
+          events.autoArcade()
+          print("Auto Arcade on")
       else
-          properties.itemFarm = false
-          print("Item Farm off")
+          properties.autoArcade = false
+          print("Auto Arcade off")
      end
 end)
 
@@ -260,4 +282,3 @@ for i = 1,#Stands do
         end
     end)
 end
-end)
